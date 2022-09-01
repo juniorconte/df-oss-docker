@@ -1,0 +1,40 @@
+version: '2'
+services:
+  mysql-df:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dreamfactory
+      MYSQL_USER: dfadmin
+      MYSQL_PASSWORD: dfadmin
+    image: mysql:5.7
+    volumes:
+      - df-mysql:/var/lib/mysql
+
+  redis-df:
+    image: redis:6.2
+
+  web-df:
+    environment:
+      SERVERNAME: dreamfactory.local
+      DB_DRIVER: mysql
+      DB_HOST: mysql-df
+      DB_USERNAME: dfadmin
+      DB_PASSWORD: dfadmin
+      DB_DATABASE: dreamfactory
+      CACHE_DRIVER: redis
+      CACHE_HOST: redis-df
+      CACHE_DATABASE: 0
+      CACHE_PORT: 6379
+    build: .
+    image: df-oss
+    volumes:
+      - df-storage:/opt/dreamfactory/storage
+    ports:
+      - "3000:80"
+
+volumes:
+  df-storage:
+    driver: local
+  
+  df-mysql:
+    driver: local
