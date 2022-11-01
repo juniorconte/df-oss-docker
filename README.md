@@ -4,6 +4,7 @@ Docker container para o ambiente DreamFactory 2.14.1 Community Open Source com U
 Adaptação baseada em https://github.com/dreamfactorysoftware/df-docker/releases/tag/2.14.1
 
 **Imagem pública disponível**
+
 https://hub.docker.com/r/juniorconte/df-oss
 
 ## Realizar o build da imagem localmente
@@ -17,9 +18,6 @@ https://hub.docker.com/r/juniorconte/df-oss
 
 ## Reiniciar containers
 `docker compose start`
-
-## Parar containers
-`docker compose stop`
 
 ## Acesso ao DreamFactory
 `http://localhost:3000`
