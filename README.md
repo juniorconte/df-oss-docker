@@ -1,13 +1,19 @@
 # df-oss-docker
 
-Docker container para o ambiente DreamFactory 2.14.1 Open Source com Ubuntu 20.04, PHP 7.1 e NGINX.
+Docker container para o ambiente DreamFactory 2.14.1 Community Open Source com Ubuntu 20.04, PHP 7.1, NodeJS 16.x, V8 e NGINX.
 Adaptação baseada em https://github.com/dreamfactorysoftware/df-docker/releases/tag/2.14.1
 
 ## Realizar o build da imagem localmente
 `docker build . -t df-oss`
 
-## Iniciar containers
+## Iniciar containers pela primeira vez
 `docker compose up -d`
+
+## Parar containers
+`docker compose stop`
+
+## Reiniciar containers
+`docker compose start`
 
 ## Parar containers
 `docker compose stop`

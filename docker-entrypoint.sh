@@ -70,8 +70,12 @@ fi
 
 # do we have an existing APP_KEY we should reuse ?
 if [ -n "$APP_KEY" ]; then
-  echo "Setting APP_KEY=$APP_KEY from environment"
-  sed -i "s/APP_KEY=/APP_KEY=$APP_KEY/" .env
+  # define AppKey on first run
+  if [ ! -e .first_run_done ]; then
+    echo "Setting APP_KEY=$APP_KEY from environment"
+    sed -i "s/APP_KEY=/APP_KEY=$APP_KEY/" .env
+    touch .first_run_done
+  fi
 else
   # generate AppKey on first run
   if [ ! -e .first_run_done ]; then
@@ -125,7 +129,7 @@ for var in "${jwt_vars[@]}"
 do
   if [ -n "${!var}" ]; then
     echo "Setting DF_${var}"
-    sed -i "s/##DF_${var}=.*/DF_${var}=${!var}/" .env
+    sed -i "s/#DF_${var}=.*/DF_${var}=${!var}/" .env
   fi
 done
 

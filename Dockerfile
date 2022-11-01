@@ -6,7 +6,8 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends software-pro
 
 # Instalar dependencias gerais
 RUN apt-get install -y --no-install-recommends \
-    git-core curl mcrypt nginx openssl zip unzip ssmtp wget
+    git-core curl mcrypt nginx openssl zip unzip ssmtp wget \
+    build-essential python libglib2.0-dev patchelf
 
 # Instalar PHP 7.1 com os módulos necessários
 RUN LANG=C.UTF-8 add-apt-repository ppa:ondrej/php -y && \
@@ -20,7 +21,6 @@ RUN LANG=C.UTF-8 add-apt-repository ppa:ondrej/php -y && \
 # Instalar NodeJS 16.x
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
 RUN apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated nodejs
-# RUN ln -s /usr/bin/nodejs /usr/bin/node
 
 # Configurar sendmail
 RUN echo 'sendmail_path = "/usr/sbin/ssmtp -t"' > /etc/php/7.1/cli/conf.d/mail.ini
@@ -42,14 +42,32 @@ RUN ln -s /etc/nginx/sites-available/dreamfactory.conf /etc/nginx/sites-enabled/
     sed -i "s/worker_connections 768;/worker_connections 2048;/" /etc/nginx/nginx.conf && \
     sed -i "s/keepalive_timeout 65;/keepalive_timeout 10;/" /etc/nginx/nginx.conf
 
+## Instalar V8
+RUN git clone https://github.com/juniorconte/v8-compilado.git /v8
+RUN mkdir /opt/v8
+RUN cp -R /v8/ubuntu_20.04/PHP7.1/* /opt/v8
+RUN rm -rf /v8
+
+## Instalar V8JS
+RUN git clone https://github.com/phpv8/v8js.git /v8js
+WORKDIR /v8js
+RUN git checkout php7
+RUN phpize
+RUN ./configure --with-v8js=/opt/v8 LDFLAGS="-lstdc++" CPPFLAGS="-DV8_COMPRESS_POINTERS"
+RUN make clean
+RUN make
+RUN make install
+RUN echo extension=v8js.so | tee /etc/php/7.1/mods-available/v8js.ini
+RUN ln -s /etc/php/7.1/mods-available/v8js.ini /etc/php/7.1/cli/conf.d/v8js.ini
+RUN ln -s /etc/php/7.1/mods-available/v8js.ini /etc/php/7.1/fpm/conf.d/v8js.ini
+RUN rm -rf /v8js
+
 # Obter código do DF a partir do GitHub
 RUN git clone https://github.com/dreamfactorysoftware/dreamfactory.git /opt/dreamfactory && \
     git config --global --add safe.directory /opt/dreamfactory
 
 WORKDIR /opt/dreamfactory
 RUN git checkout tags/2.14.1
-
-WORKDIR /opt/dreamfactory
 
 # Instalar o DF
 RUN rm composer.lock && \
