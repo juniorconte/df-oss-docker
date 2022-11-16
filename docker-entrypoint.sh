@@ -48,6 +48,11 @@ if [ -n "$CACHE_PERSISTENT_ID" ]; then
   sed -i "s/#CACHE_PERSISTENT_ID=/CACHE_PERSISTENT_ID=$CACHE_PERSISTENT_ID/" .env
 fi
 
+if [ -n "$CACHE_PREFIX" ]; then
+  echo "Setting CACHE_PREFIX"
+  sed -i "s/#CACHE_PREFIX=dreamfactory/CACHE_PREFIX=$CACHE_PREFIX/" .env
+fi
+
 if [ -n "$CACHE_PASSWORD" ]; then
   echo "Setting CACHE_PASSWORD"
   sed -i "s/#CACHE_PASSWORD=/CACHE_PASSWORD=$CACHE_PASSWORD/" .env

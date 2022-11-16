@@ -35,6 +35,7 @@ https://hub.docker.com/r/juniorconte/df-oss
 |DB_PORT|Database Port|no|3306
 |CACHE_DRIVER|Cache Driver (file, redis, memcached)|no|*uses file*
 |CACHE_HOST|Cache Host|no|*uses file caching*
+|CACHE_PRFIX|Cache Prefix|no|*uses dreamfactory*
 |CACHE_DATABASE|Redis DB|only if CACHE_DRIVER is set to redis
 |CACHE_PORT|Redis/Memcached Port|no|6379
 |CACHE_PASSWORD|Redis/Memcached Password|no|*none used*
